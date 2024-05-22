@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .order {
+            background: #fff;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .order h2 {
+            margin: 0 0 10px;
+        }
+        .order p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Order List</h1>
+        <% orders.forEach(order => { %>
+            <div class="order">
+                <h2>Order placed at <%= order.timestamp.toLocaleString() %></h2>
+                <% order.menu.forEach(item => { %>
+                    <p>Beverage: <%= item.beverage %></p>
+                    <p>Temperature: <%= item.temperature %></p>
+                    <p>Quantity: <%= item.quantity %></p>
+                <% }) %>
+            </div>
+        <% }) %>
+    </div>
+</body>
+</html>

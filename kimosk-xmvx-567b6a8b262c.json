@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "kimosk-xmvx",
+  "private_key_id": "567b6a8b262c16760f02bbdd400dbbbd5834b018",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDMN3DM/+THGi1C\nsTtHJ2zcBgAYXbJbZIb/74pd053aFVhuwlP1xzvWqAzBHZxY9AiwML11WOfUF9yX\nHeMY3+pecqeat+eSyasyFd9XRu4bc6ivzTWPnTnAaAGcEIqvkuZqpxsj5YMq6+ab\n2W3NeTw9hmzCB+SL1nisK/ZzXGp/DvtLwHSDycs/t6aDOlkhP8YrsZrgdeGFulrC\nbQ+upEjk4Gfjt6fNWRSlpebXWPcPoxtwDE9YvMrlVDdCVUpvgk0jzoObWCSttLgI\nOF8a5kJ30TZNklFRrAP3RzUXHaDf+pNG1AWJA5cbTRwGaFwh59Bs8JTjLG7BUzhw\nssA2ubYJAgMBAAECggEAFyL826zuPYSAtjqgLaqQ0ci4QAp1h5c3GE4KTiEIlEmw\n0DOiEYl2BRbbAxIYwZc8WMHc5SuicEwXyOMw9IOB6RtyU7wcN2wzwiPqPtghZ+jN\npsVIGTJF9b+S1xykqcmp41F1aLa7CqTZZrTWlN30bkAJmF4Oja1J1K/SZzWEN0rG\na053FByiCl18GzcIKYLlTXekSxTaawxlsBX4gJj2Ankdge4QAsDBOl4YOxoGoabr\nnH9VOtsJ9ir8C1HOFJnWVXLpkSpZBRuJRCzwKEXYgShmjguIxmmw55qDbVEKlT61\n997cC2vroBArGhgwSIYAEqcdHLoJg2t0mZSxQzVrgQKBgQDntF9GEVaY5PUzVpUi\nTPP0k1QM2h+q40kBmpvuZ2zs/37u1PEnKXWqMG+Nrt98P10mJrevL/y5j4nOXrBA\n/4NWj25WG7W+q08Q6CPNK+yTFb91jAMv2r1uJearq1ZDGRRMndIS/xH8luyR7mjl\nEiYdZuFDvOC5hSmrMDDUNtl3+QKBgQDhoTW5yaeznPB/FGcJgZ2bc7eV3F8x6hg7\nPxEitOjdqBvcu324o5YMMMMaDm9IjjqJbKwsyfXtx/MWKm72HaFtI9Sk7ZaIF691\nJFk9LdQuOlqUpKnSrxSsLxvSJCbOIZnvInrddoimjO9Ov3K2X5BOXAq0fI4JGsEM\nRKKCU9dSkQKBgQCgpu9oJZ1lZVqdveqpXbHIYl5kithqJCz6b7iuFAfySzQ3ZG3Q\nOW7cEblHA3jxLP3o9e9mCF+ySVPDQuPyLTdjTQ+zpILfMOghUNOB7nKZiPq3Bd0v\n0PqG5MCLRsEIxNrORJ7jjPdrqzlb9XHFYlALEsodrVgjSbEagM9aVK10AQKBgQDd\nL2IxrUPfSfxhN6kCorPUjo3sNUqE7g2vFtY/hcW6dXBK5OoMNSGE9dBtHLVvFS7B\nRW1Lwvh5j0f39MUuNEHpcfSlcdvdsgpo9acd2G1mnAHsMbfhN402dj/5s0LvU/VJ\nfi2gKPExBHwcYIWdzvTyPDyqTmgW+MlCs43z4Sj2YQKBgQDTHme/Mu7llCZM6AkD\n0nOqJBx+n8kKjrJwq54ne6xL9daPEf+MO/yKVElQqVQ3zod/HNPlre/e3nMLRZGf\n9OTlTXh26MuWIZDqWzLKpzfXOPUoF3rNUb/coxiIUABQXGjhDz4pQAEhPV1oIbP6\nMRq2oiKZ59trmUSYIOSc5eZ6tg==\n-----END PRIVATE KEY-----\n",
+  "client_email": "kimosk@kimosk-xmvx.iam.gserviceaccount.com",
+  "client_id": "112352437552338489758",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/kimosk%40kimosk-xmvx.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
