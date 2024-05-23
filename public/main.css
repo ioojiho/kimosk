@@ -1,0 +1,98 @@
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: black;
+}
+
+#kiosk-container {
+    width: 500px;
+    height: 100vh;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+#menu-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 0px;
+}
+
+.menu-section {
+    width: 45%;
+}
+
+.menu-section h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.menu-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.menu-section li {
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+#image-container {
+    width: 100%;
+    height: 350px; /* 원하는 높이로 설정 */
+    margin-bottom: 0px;
+    overflow: hidden;
+}
+
+#image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#chat-container {
+    width: 100%;
+    padding: 10px;
+}
+
+#chat-box {
+    height: 20vh; /* 줄 수 제한을 위한 높이 설정 */
+    overflow-y: auto;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: white;
+}
+
+button {
+    padding: 10px;
+    margin: 5px auto;
+    font-size: 16px;
+    display: block;
+    border: none;
+    border-radius: 5px;
+    background-color: #c2b8ae;
+    font-weight:700;
+    color: rgb(243, 240, 240);
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #8b837c;
+}
+
+button.recording {
+    background-color: rgb(67, 63, 59);
+}
+
+h1 {
+    color: #9E8877;
+}
