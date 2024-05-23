@@ -1,5 +1,5 @@
-//Cloud function 배포시 index.js 사용해 진입점 설정 (deploy.ps1)
-//로컬 개발시에는 server.js 설정 (npm start)
+//Cloud function 배포 : deploy.ps1 (index.js 의 app이 진입점)
+//로컬 실행 : nodemon server.js (server.js)
 
 require('dotenv').config();
 const express = require('express');
@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 3000;
 const keyFilename = path.join(__dirname, process.env.GOOGLE_APPLICATION_CREDENTIALS); // 서비스 계정 키 파일 경로
 const sessionClient = new SessionsClient({ keyFilename }); // Dialogflow 세션 클라이언트 생성
 
-// Dialogflow 통신처리
+// Dialogflow 통신처리 2
 const projectId = process.env.DIALOGFLOW_PROJECT_ID;
 const sessionId = process.env.DIALOGFLOW_SESSION_ID;
 const languageCode = process.env.DIALOGFLOW_LANGUAGE_CODE;
@@ -25,50 +25,41 @@ const languageCode = process.env.DIALOGFLOW_LANGUAGE_CODE;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
 // serving
 app.use(express.static(path.join(__dirname, 'public'))); // 'public' 디렉토리의 정적 파일 서빙
 app.get('/', (req, res) => { // index.html 서빙
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
-app.get('/orders', async (req, res) => {
-    try {
-        const orders = await Order.find().sort({ timestamp: -1 });
-        res.render('orders', { orders });
-    } catch (err) {
-        console.error('주문 불러오기 중 오류 발생:', err);
-        res.status(500).send('서버 오류');
-    }
-});
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// MongoDB 연결 설정
+// 로컬 서버 실행
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`http://localhost:${PORT} 서버 실행중`);
+    });
+}
+
+// 클라우드 서버 진입점
+module.exports = app; 
 
 
-const mongoURI = 'mongodb+srv://jiho9380:wlgh@cluster0.gq0icjx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'; // MongoDB URI 설정
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 1. mongodb 연결 mongoose
+const mongoURI = 'mongodb+srv://jiho9380:wlgh@cluster0.gq0icjx.mongodb.net/test?retryWrites=true&w=majority&appName=Cluster0'; // MongoDB URI 설정
+
 mongoose.connect(mongoURI)
     .then(() => console.log('MongoDB 연결 성공'))
     .catch(err => console.log('MongoDB 연결 실패', err));
 
-// 메뉴 스키마 설정
-const menuSchema = new mongoose.Schema({
-    beverage: { type: String, required: true },
-    temperature: { type: String, required: true },
-    quantity: { type: Number, required: true }
+const Schema = mongoose.Schema;
+const testEntitySchema = new Schema({
+    name: String,
+    value: String
 });
-
-// 주문 스키마 설정
-const orderSchema = new mongoose.Schema({
-    menu: { type: [menuSchema], required: true },
-    timestamp: { type: Date, default: Date.now }
-});
-
-const Order = mongoose.model('Order', orderSchema);
-
+const TestEntity = mongoose.model('TestEntity', testEntitySchema);
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Dialogflow와의 통신을 처리하는 엔드포인트
+// 2. Dialogflow와의 통신을 처리하는 엔드포인트 (최종)
 app.post('/dialogflow', async (req, res) => {
     const { message } = req.body; // 클라이언트로부터 받은 메시지
     const sessionPath = sessionClient.projectAgentSessionPath(projectId, sessionId);
@@ -100,53 +91,69 @@ app.post('/dialogflow', async (req, res) => {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Dialogflow Fulfillment 엔드포인트
+3. // Dialogflow Fulfillment 엔드포인트 (ver1)
+// node.js와 express로 웹훅서버 설정하는 방식 
 app.post('/webhook', async (req, res) => {
+    console.log("Webhook POST 요청 수신");
     const intentName = req.body.queryResult.intent.displayName;
 
     if (intentName === 'test') {
-        console.log("test 진입");
-        const response = { fulfillmentText: '수정된 test Webhook 테스트인텐트 실행중' };
-        res.json(response);
-    } else if (intentName === '0001-order-beverage') {
-        let parameters = req.body.queryResult.parameters;
-        const responseText = '주문접수완료';
-        const response = { fulfillmentText: responseText };
+        console.log("test1 webhook 연결 완료");
+        const response = { fulfillmentText: 'test1 webhook 연결 완료' };
         res.json(response);
 
 
-
-
-        // let beverage = parameters.beverage;
-        // let quantity = parameters.quantity;
-        // let temperature = parameters.temperature;
-
-        // console.log("intent 진입");
-
-        // // 주문 항목 생성
-        // const menu = [{ beverage, temperature, quantity }];
-        // const order = new Order({ menu });
-
-    //     // MongoDB에 저장
-    //     try {
-    //         await order.save();
-    //         res.json({ fulfillmentText: '주문이 성공적으로 저장되었습니다.' });
-    //     } catch (err) {
-    //         console.error('주문 저장 중 오류 발생:', err);
-    //         res.json({ fulfillmentText: '주문 저장 중 오류가 발생했습니다. 다시 시도해주세요.' });
-    //     }
-     }
-
-});
-
-
-
-// 로컬 서버 실행
-if (require.main === module) {
-    app.listen(PORT, () => {
-        console.log(`http://localhost:${PORT} 서버 실행중`);
-    });
+    } else if (intentName === 'test2') {
+        const testEntityValue = parameters.testentity;
+        const newTestEntity = new TestEntity({ name: 'testentity', value: testEntityValue });
+        
+        try {
+            await newTestEntity.save();
+            console.log('Entity saved successfully');  // 로그 추가
+            res.json({ fulfillmentText: `성공적으로 저장되었습니다: ${testEntityValue}` });
+        } catch (error) {
+            console.error('저장 중 오류 발생:', error);  // 로그 추가
+            res.json({ fulfillmentText: '저장 중 오류가 발생했습니다.' });
+        }
+    } else {
+        res.json({ fulfillmentText: '연결성공' });
+    }
 }
 
-// 서버 시작 (진입점. Express 애플리케이션을 모듈로 내보냄)
-module.exports = app;
+);
+
+
+
+// // Dialogflow Fulfillment 엔드포인트 ver.2 
+// // dialogflow fulfillment 라이브러리로 인텐트 핸들러 정의하는 버전
+// app.post('/webhook', (req, res) => {
+//     const agent = new WebhookClient({ request: req, response: res });
+ 
+//     function testHandler(agent) {
+//         console.log('연결성공');
+//         agent.add('연결성공');
+//     }
+
+//     async function test2Handler(agent) {
+//         const testEntityValue = agent.parameters.testentity;
+
+//         const newTestEntity = new TestEntity({ name: 'testentity', value: testEntityValue });
+        
+//         try {
+//             await newTestEntity.save();
+//             agent.add(`성공적으로 저장되었습니다: ${testEntityValue}`);
+//         } catch (error) {
+//             console.error('저장 중 오류 발생:', error);
+//             agent.add('저장 중 오류가 발생했습니다.');
+//         }
+//     }
+    
+
+//     // 각 인텐트에 대응하는 핸들러 함수 등록
+//     let intentMap = new Map();
+//     intentMap.set('test', testHandler);  // 'test' 인텐트에 대한 핸들러 등록
+//     intentMap.set('test2', test2Handler);
+
+//     agent.handleRequest(intentMap);
+
+// });
