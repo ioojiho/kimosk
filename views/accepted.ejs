@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KIMOSK 카페 주문내역</title>
+    <style>
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin: auto;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+            text-align: left;
+        }
+        h1 {
+            color: #9E8877;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>KIMOSK 카페 주문내역</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Beverage</th>
+                <th>Temperature</th>
+                <th>Quantity</th>
+                <th>Order Number</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% orders.forEach(order => { %>
+                <tr>
+                    <td><%= order._id %></td>
+                    <td><%= order.beverage %></td>
+                    <td><%= order.temperature %></td>
+                    <td><%= order.quantity %></td>
+                    <td><%= order.orderNumber %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</body>
+</html>

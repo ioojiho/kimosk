@@ -6,7 +6,6 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const { SessionsClient } = require('@google-cloud/dialogflow');
-const { WebhookClient } = require('dialogflow-fulfillment');
 const mongoose = require('mongoose');
 
 const app = express();
@@ -41,6 +40,21 @@ if (require.main === module) {
 // 클라우드 서버 진입점
 module.exports = app; 
 
+// EJS 설정
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+
+// /accepted 경로 설정
+app.get('/accepted', async (req, res) => {
+    try {
+        const orders = await Order.find({});
+        res.render('accepted', { orders });
+    } catch (err) {
+        console.error('Error retrieving orders:', err);
+        res.status(500).send('Error retrieving orders');
+    }
+});
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 1. mongodb 연결 mongoose
@@ -53,18 +67,19 @@ mongoose.connect(mongoURI)
 
 const Schema = mongoose.Schema;
 
-const orderSchema = new Schema({
-    item: String,
-    test: String,
-    orderNumber: { type: Number, unique: true, required: true }
+const orderSchema = new mongoose.Schema({
+    beverage: String,
+    temperature: String,
+    quantity: Number,
+    orderNumber: Number
 });
 
 const Order = mongoose.model('Order', orderSchema, 'orders');
 
-const testOrder = new Order({ item: '1', test: 'test', orderNumber: Date.now() });
-testOrder.save()
-    .then(() => console.log('테스트 주문 삽입 성공'))
-    .catch(err => console.error('테스트 주문 삽입 실패', err));
+// const testOrder = new Order({ temperature: '아이스', beverage: '바닐라라떼', quantity: 2, orderNumber: Date.now() });
+// testOrder.save()
+//     .then(() => console.log('테스트 주문 삽입 성공'))
+//     .catch(err => console.error('테스트 주문 삽입 실패', err));
 
 
 
@@ -112,11 +127,15 @@ app.post('/webhook', async (req, res) => {
         console.log("test1 webhook 연결 완료");
         const response = { fulfillmentText: 'test1 webhook 연결 완료' };
         res.json(response);
-
-
     } else if (intentName === 'test2') {
         const testEntityValue = parameters.testentity;
-        res.json({ fulfillmentText: `Received testentity: ${testEntityValue}` });
+
+        // const newOrder = new Order({ item: testEntityValue, test: 'test', orderNumber: Date.now() });
+        // newOrder.save()
+        //     .then(() => console.log('테스트 주문 삽입 성공'))
+        //     .catch(err => console.error('테스트 주문 삽입 실패', err));
+
+        // res.json({ fulfillmentText: `Received testentity: ${testEntityValue}` });
     }
 }
 
