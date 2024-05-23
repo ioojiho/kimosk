@@ -50,15 +50,25 @@ mongoose.connect(mongoURI)
     .then(() => console.log('MongoDB 연결 성공'))
     .catch(err => console.log('MongoDB 연결 실패', err));
 
+
 const Schema = mongoose.Schema;
-const testEntitySchema = new Schema({
-    name: String,
-    value: String
+
+const orderSchema = new Schema({
+    item: String,
+    test: String,
+    orderNumber: { type: Number, unique: true, required: true }
 });
-const TestEntity = mongoose.model('TestEntity', testEntitySchema);
+
+const Order = mongoose.model('Order', orderSchema, 'orders');
+
+const testOrder = new Order({ item: '1', test: 'test', orderNumber: Date.now() });
+testOrder.save()
+    .then(() => console.log('테스트 주문 삽입 성공'))
+    .catch(err => console.error('테스트 주문 삽입 실패', err));
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 2. Dialogflow와의 통신을 처리하는 엔드포인트 (최종)
 app.post('/dialogflow', async (req, res) => {
     const { message } = req.body; // 클라이언트로부터 받은 메시지
@@ -96,6 +106,7 @@ app.post('/dialogflow', async (req, res) => {
 app.post('/webhook', async (req, res) => {
     console.log("Webhook POST 요청 수신");
     const intentName = req.body.queryResult.intent.displayName;
+    const parameters = req.body.queryResult.parameters;
 
     if (intentName === 'test') {
         console.log("test1 webhook 연결 완료");
@@ -105,55 +116,8 @@ app.post('/webhook', async (req, res) => {
 
     } else if (intentName === 'test2') {
         const testEntityValue = parameters.testentity;
-        const newTestEntity = new TestEntity({ name: 'testentity', value: testEntityValue });
-        
-        try {
-            await newTestEntity.save();
-            console.log('Entity saved successfully');  // 로그 추가
-            res.json({ fulfillmentText: `성공적으로 저장되었습니다: ${testEntityValue}` });
-        } catch (error) {
-            console.error('저장 중 오류 발생:', error);  // 로그 추가
-            res.json({ fulfillmentText: '저장 중 오류가 발생했습니다.' });
-        }
-    } else {
-        res.json({ fulfillmentText: '연결성공' });
+        res.json({ fulfillmentText: `Received testentity: ${testEntityValue}` });
     }
 }
 
 );
-
-
-
-// // Dialogflow Fulfillment 엔드포인트 ver.2 
-// // dialogflow fulfillment 라이브러리로 인텐트 핸들러 정의하는 버전
-// app.post('/webhook', (req, res) => {
-//     const agent = new WebhookClient({ request: req, response: res });
- 
-//     function testHandler(agent) {
-//         console.log('연결성공');
-//         agent.add('연결성공');
-//     }
-
-//     async function test2Handler(agent) {
-//         const testEntityValue = agent.parameters.testentity;
-
-//         const newTestEntity = new TestEntity({ name: 'testentity', value: testEntityValue });
-        
-//         try {
-//             await newTestEntity.save();
-//             agent.add(`성공적으로 저장되었습니다: ${testEntityValue}`);
-//         } catch (error) {
-//             console.error('저장 중 오류 발생:', error);
-//             agent.add('저장 중 오류가 발생했습니다.');
-//         }
-//     }
-    
-
-//     // 각 인텐트에 대응하는 핸들러 함수 등록
-//     let intentMap = new Map();
-//     intentMap.set('test', testHandler);  // 'test' 인텐트에 대한 핸들러 등록
-//     intentMap.set('test2', test2Handler);
-
-//     agent.handleRequest(intentMap);
-
-// });
